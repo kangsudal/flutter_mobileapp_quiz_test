@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:quizz_app/model/model_quizz.dart';
+import 'package:quizz_app/screen/screen_quizz.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -6,6 +8,25 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<Quizz> quizzs = [
+    //퀴즈 더미 데이터. quizz screen으로 보내준다.
+    //전달할 때 커스텀 오브젝트를 직접 전달할 수 없기 때문에 맵 형태로 전달하고 다시 오브젝트로 재구성하기 위함이다.
+    Quizz.fromMap({
+      'title': 'test',
+      'candidates': ['a', 'b', 'c', 'd'],
+      'answer': 0
+    }),
+    Quizz.fromMap({
+      'title': 'test',
+      'candidates': ['a', 'b', 'c', 'd'],
+      'answer': 0
+    }),
+    Quizz.fromMap({
+      'title': 'test',
+      'candidates': ['a', 'b', 'c', 'd'],
+      'answer': 0
+    }),
+  ];
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -53,13 +74,21 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: EdgeInsets.only(bottom: width * 0.036),
               child: Center(
                 child: ButtonTheme(
-                  minWidth: width*0.8,
-                  height: height*0.05,
+                  minWidth: width * 0.8,
+                  height: height * 0.05,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: RaisedButton(
-                      onPressed: (){},
+                      onPressed: () {
+                        //quizz푸는 화면으로 이동
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => QuizzScreen(
+                                      quizzs: quizzs,
+                                    )));
+                      },
                       child: Text(
                         '지금 퀴즈 풀기',
                         style: TextStyle(color: Colors.white),

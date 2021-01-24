@@ -29,6 +29,9 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
 
+  #화면을 옆으로 넘기게 해주는 패키지
+  flutter_swiper:
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
