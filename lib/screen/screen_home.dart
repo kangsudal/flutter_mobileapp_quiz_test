@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:quizz_app/model/api_adapter.dart';
 import 'package:quizz_app/model/model_quizz.dart';
 import 'package:quizz_app/screen/screen_quizz.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -8,8 +11,25 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
+  List<Quizz> quizzs = [];
+  bool isLoading = false;
     //전달할 때 커스텀 오브젝트를 직접 전달할 수 없기 때문에 맵 형태로 전달하고 다시 오브젝트로 재구성하기 위함이다.
+
+  _fetchQuizzs() async {
+    setState(() {
+      isLoading = true;
+    });
+    final response = await http.get('http://49.50.173.73:8000/quiz/4/');
+    if(response.statusCode == 200){//상태코드가 정상이면 quizzs 객체 업데이트
+      setState(() {
+        quizzs = parseQuizzs(utf8.decode(response.bodyBytes));
+        isLoading = false;
+      });
+    }else{
+      //아니면 에러 발생시킴
+      throw Exception('failed to load data');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
