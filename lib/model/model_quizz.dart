@@ -9,4 +9,9 @@ class Quizz{
   :title=map['title'],
   candidates=map['candidates'],
   answer=map['answer'];
+
+  Quizz.fromJson(Map<String, dynamic> json)
+  : title = json['title'],
+  candidates = json['body'].toString().split('/'),
+  answer = json['answer'];
 }
