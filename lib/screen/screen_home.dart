@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => QuizzScreen(
-                                      quizzs: quizzs,
+                                      quizzs: quizzs,//quizz 3개 전달
                                     )));
                       },
                       child: Text(
