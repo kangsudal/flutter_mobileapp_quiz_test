@@ -13,19 +13,20 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Quizz> quizzs = [];
   bool isLoading = false;
-    //전달할 때 커스텀 오브젝트를 직접 전달할 수 없기 때문에 맵 형태로 전달하고 다시 오브젝트로 재구성하기 위함이다.
+  //전달할 때 커스텀 오브젝트를 직접 전달할 수 없기 때문에 맵 형태로 전달하고 다시 오브젝트로 재구성하기 위함이다.
 
   _fetchQuizzs() async {
     setState(() {
       isLoading = true;
     });
     final response = await http.get('http://49.50.173.73:8000/quiz/4/');
-    if(response.statusCode == 200){//상태코드가 정상이면 quizzs 객체 업데이트
+    if (response.statusCode == 200) {
+      //상태코드가 정상이면 quizzs 객체 업데이트
       setState(() {
         quizzs = parseQuizzs(utf8.decode(response.bodyBytes));
         isLoading = false;
       });
-    }else{
+    } else {
       //아니면 에러 발생시킴
       throw Exception('failed to load data');
     }
@@ -87,13 +88,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     child: RaisedButton(
                         onPressed: () {
-                          //quizz푸는 화면으로 이동
-                          Navigator.push(
+                          //_fetchQuizzs 호출. fetchQuizzs가 완료되어야 다음 스크린으로 이동하도록.
+                          _fetchQuizzs().whenComplete(() {
+                            //quizz푸는 화면으로 이동
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => QuizzScreen(
-                                        quizzs: quizzs,//quizz 3개 전달
-                                      )));
+                                builder: (context) => QuizzScreen(
+                                  quizzs: quizzs, //quizz 3개 전달
+                                ),
+                              ),
+                            );
+                          });
                         },
                         child: Text(
                           '지금 퀴즈 풀기',
