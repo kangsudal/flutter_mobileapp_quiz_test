@@ -16,6 +16,7 @@ class _QuizzScreenState extends State<QuizzScreen> {
   List<int> _answers = [-1, -1, -1]; //문제별 사용자의 정답을 담을 칸 3문제
   List<bool> _answerState = [false, false, false, false]; //문제의 답을 선택했는지 상태값 (1문제당 4개선택지)
   int _currentIndex = 0; //현재 보고있는 문제 번호
+  SwiperController _controller = SwiperController();
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +33,9 @@ class _QuizzScreenState extends State<QuizzScreen> {
             //   border: Border.all(color: Colors.deepPurple),
             // ),
             width: width * 0.85,
-            height: height * 0.5,
+            height: height * 0.7,
             child: Swiper(
+              controller: _controller,
               physics: NeverScrollableScrollPhysics(),//퀴즈 스킵 막음
               loop: false,
               itemCount: widget.quizzs.length,
@@ -87,6 +89,38 @@ class _QuizzScreenState extends State<QuizzScreen> {
           Column(
             //퀴즈 선택지
             children: _buildCandidates(width, quizz),
+          ),
+          Container(
+            padding: EdgeInsets.all(width * 0.024),
+            child: Center(
+              child: ButtonTheme(
+                minWidth: width*0.5,
+                height: height * 0.05,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: RaisedButton(
+                  child: _currentIndex == widget.quizzs.length -1 //현재 인덱스가 마지막 퀴즈를 카르킨다면
+                      ? Text('결과보기'): Text('다음문제'),
+                  textColor: Colors.white,
+                  color: Colors.orangeAccent,
+                  onPressed: _answers[_currentIndex] == -1 ? null : (){//답을 아직 선택했을때만
+                    if (_currentIndex == widget.quizzs.length -1 ){//마지막문제일때
+
+                    }
+                    else{
+//                      print(_answerState);
+//                      print(_answers);
+//                      print(_currentIndex);
+                      _answerState = [false, false, false, false];//다음 문제를 위해 선택지 초기화
+                      _currentIndex += 1;
+                      _controller.next();//Swiper Controller로 다음페이지로 넘어감
+                    }
+                  },
+
+                ),
+              )
+            )
           )
         ],
       ),
