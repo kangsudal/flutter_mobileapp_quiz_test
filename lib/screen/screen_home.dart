@@ -11,6 +11,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<Quizz> quizzs = [];
   bool isLoading = false;
   //전달할 때 커스텀 오브젝트를 직접 전달할 수 없기 때문에 맵 형태로 전달하고 다시 오브젝트로 재구성하기 위함이다.
@@ -19,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       isLoading = true;
     });
-    final response = await http.get('http://49.50.173.73:8000/quiz/4/');
+    final response = await http.get('http://49.50.173.73:8000/quiz/3/');
     if (response.statusCode == 200) {
       //상태코드가 정상이면 quizzs 객체 업데이트
       setState(() {
@@ -42,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
       onWillPop: () async => false,
       child: SafeArea(
         child: Scaffold(
+          key: _scaffoldKey,
           appBar: AppBar(
             actions: [],
             title: Text("My Quizz App"),
@@ -88,6 +90,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     child: RaisedButton(
                         onPressed: () {
+                          _scaffoldKey.currentState.showSnackBar(
+                            SnackBar(
+                              content: Row(
+                                children: [
+                                  CircularProgressIndicator(),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(left: width * 0.036),
+                                  ),
+                                  Text('LOADING...'),
+                                ],
+                              ),
+                            ),
+                          );
                           //_fetchQuizzs 호출. fetchQuizzs가 완료되어야 다음 스크린으로 이동하도록.
                           _fetchQuizzs().whenComplete(() {
                             //quizz푸는 화면으로 이동

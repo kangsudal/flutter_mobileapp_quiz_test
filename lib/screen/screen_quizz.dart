@@ -14,7 +14,7 @@ class QuizzScreen extends StatefulWidget {
 }
 
 class _QuizzScreenState extends State<QuizzScreen> {
-  List<int> _answers = [-1, -1, -1]; //문제별 사용자의 정답을 담을 칸 3문제
+  List<int> _answers = List.filled(3, -1);//[-1, -1, -1]; //문제별 사용자의 정답을 담을 칸 3문제
   List<bool> _answerState = [
     false,
     false,
