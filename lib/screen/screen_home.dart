@@ -33,70 +33,73 @@ class _HomeScreenState extends State<HomeScreen> {
     double width = screenSize.width;
     double height = screenSize.height;
 
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          actions: [],
-          title: Text("My Quizz App"),
-          backgroundColor: Colors.deepPurple,
-          leading: Container(),
-        ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Center(
-              child: Image.asset(
-                'images/quizz.jpg',
-                width: width * 0.8,
-              ),
-            ),
-            Padding(padding: EdgeInsets.all(width * 0.028)),
-            Text(
-              '지니를 위한 퀴즈 앱',
-              style: TextStyle(
-                fontSize: width * 0.065,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              '퀴즈를 풀기 전 안내사항입니다.\n꼼꼼히 읽고 퀴즈 풀기를 눌러주세요.',
-              textAlign: TextAlign.center,
-            ),
-            Padding(padding: EdgeInsets.all(width * 0.048)),
-            _buildStep(width, '1. 랜덤으로 나오는 퀴즈 3개를 풀어보세요.'),
-            _buildStep(width, '2. 문제를 잘 읽고 정답을 고른 뒤\n다음 문제 버튼을 눌러주세요.'),
-            _buildStep(width, '3. 만점을 향해 도전해보세요!'),
-            Padding(
-              padding: EdgeInsets.all(width * 0.048),
-            ),
-            Container(
-              padding: EdgeInsets.only(bottom: width * 0.036),
-              child: Center(
-                child: ButtonTheme(
-                  minWidth: width * 0.8,
-                  height: height * 0.05,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: RaisedButton(
-                      onPressed: () {
-                        //quizz푸는 화면으로 이동
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => QuizzScreen(
-                                      quizzs: quizzs,//quizz 3개 전달
-                                    )));
-                      },
-                      child: Text(
-                        '지금 퀴즈 풀기',
-                        style: TextStyle(color: Colors.white),
-                      )),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            actions: [],
+            title: Text("My Quizz App"),
+            backgroundColor: Colors.deepPurple,
+            leading: Container(),
+          ),
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: Image.asset(
+                  'images/quizz.jpg',
+                  width: width * 0.8,
                 ),
               ),
-            )
-          ],
+              Padding(padding: EdgeInsets.all(width * 0.028)),
+              Text(
+                '지니를 위한 퀴즈 앱',
+                style: TextStyle(
+                  fontSize: width * 0.065,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                '퀴즈를 풀기 전 안내사항입니다.\n꼼꼼히 읽고 퀴즈 풀기를 눌러주세요.',
+                textAlign: TextAlign.center,
+              ),
+              Padding(padding: EdgeInsets.all(width * 0.048)),
+              _buildStep(width, '1. 랜덤으로 나오는 퀴즈 3개를 풀어보세요.'),
+              _buildStep(width, '2. 문제를 잘 읽고 정답을 고른 뒤\n다음 문제 버튼을 눌러주세요.'),
+              _buildStep(width, '3. 만점을 향해 도전해보세요!'),
+              Padding(
+                padding: EdgeInsets.all(width * 0.048),
+              ),
+              Container(
+                padding: EdgeInsets.only(bottom: width * 0.036),
+                child: Center(
+                  child: ButtonTheme(
+                    minWidth: width * 0.8,
+                    height: height * 0.05,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: RaisedButton(
+                        onPressed: () {
+                          //quizz푸는 화면으로 이동
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => QuizzScreen(
+                                        quizzs: quizzs,//quizz 3개 전달
+                                      )));
+                        },
+                        child: Text(
+                          '지금 퀴즈 풀기',
+                          style: TextStyle(color: Colors.white),
+                        )),
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
