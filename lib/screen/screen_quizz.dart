@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:quizz_app/model/model_quizz.dart';
+import 'package:quizz_app/screen/screen_result.dart';
 import 'package:quizz_app/widget/widget_candidate.dart';
 
 /* 퀴즈 문제 푸는 화면 */
@@ -14,7 +15,12 @@ class QuizzScreen extends StatefulWidget {
 
 class _QuizzScreenState extends State<QuizzScreen> {
   List<int> _answers = [-1, -1, -1]; //문제별 사용자의 정답을 담을 칸 3문제
-  List<bool> _answerState = [false, false, false, false]; //문제의 답을 선택했는지 상태값 (1문제당 4개선택지)
+  List<bool> _answerState = [
+    false,
+    false,
+    false,
+    false
+  ]; //문제의 답을 선택했는지 상태값 (1문제당 4개선택지)
   int _currentIndex = 0; //현재 보고있는 문제 번호
   SwiperController _controller = SwiperController();
 
@@ -36,7 +42,7 @@ class _QuizzScreenState extends State<QuizzScreen> {
             height: height * 0.7,
             child: Swiper(
               controller: _controller,
-              physics: NeverScrollableScrollPhysics(),//퀴즈 스킵 막음
+              physics: NeverScrollableScrollPhysics(), //퀴즈 스킵 막음
               loop: false,
               itemCount: widget.quizzs.length,
               itemBuilder: (BuildContext context, int index) {
@@ -68,7 +74,7 @@ class _QuizzScreenState extends State<QuizzScreen> {
               style: TextStyle(
                   fontSize: width * 0.06, fontWeight: FontWeight.bold),
             ),
-          ),//퀴즈 번호
+          ), //퀴즈 번호
           Container(
             width: width * 0.8,
             padding: EdgeInsets.only(top: width * 0.012),
@@ -82,7 +88,7 @@ class _QuizzScreenState extends State<QuizzScreen> {
                 color: Colors.black,
               ),
             ),
-          ),//퀴즈 제목
+          ), //퀴즈 제목
           Expanded(
             child: Container(),
           ),
@@ -91,37 +97,50 @@ class _QuizzScreenState extends State<QuizzScreen> {
             children: _buildCandidates(width, quizz),
           ),
           Container(
-            padding: EdgeInsets.all(width * 0.024),
-            child: Center(
-              child: ButtonTheme(
-                minWidth: width*0.5,
+              padding: EdgeInsets.all(width * 0.024),
+              child: Center(
+                  child: ButtonTheme(
+                minWidth: width * 0.5,
                 height: height * 0.05,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: RaisedButton(
-                  child: _currentIndex == widget.quizzs.length -1 //현재 인덱스가 마지막 퀴즈를 카르킨다면
-                      ? Text('결과보기'): Text('다음문제'),
+                  child: _currentIndex ==
+                          widget.quizzs.length - 1 //현재 인덱스가 마지막 퀴즈를 카르킨다면
+                      ? Text('결과보기')
+                      : Text('다음문제'),
                   textColor: Colors.white,
                   color: Colors.orangeAccent,
-                  onPressed: _answers[_currentIndex] == -1 ? null : (){//답을 아직 선택했을때만
-                    if (_currentIndex == widget.quizzs.length -1 ){//마지막문제일때
-
-                    }
-                    else{
+                  onPressed: _answers[_currentIndex] == -1
+                      ? null
+                      : () {
+                          //답을 아직 선택했을때만
+                          if (_currentIndex == widget.quizzs.length - 1) {
+                            //마지막문제일때
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ResultScreen(
+                                    answers: _answers, quizzs: widget.quizzs),
+                              ),
+                            );
+                          } else {
 //                      print(_answerState);
 //                      print(_answers);
 //                      print(_currentIndex);
-                      _answerState = [false, false, false, false];//다음 문제를 위해 선택지 초기화
-                      _currentIndex += 1;
-                      _controller.next();//Swiper Controller로 다음페이지로 넘어감
-                    }
-                  },
-
+                            _answerState = [
+                              false,
+                              false,
+                              false,
+                              false
+                            ]; //다음 문제를 위해 선택지 초기화
+                            _currentIndex += 1;
+                            _controller.next(); //Swiper Controller로 다음페이지로 넘어감
+                          }
+                        },
                 ),
-              )
-            )
-          )
+              )))
         ],
       ),
     );
@@ -129,7 +148,7 @@ class _QuizzScreenState extends State<QuizzScreen> {
 
   _buildCandidates(double width, Quizz quizz) {
     List<Widget> _children = []; //선택지 위젯들을 담을 리스트
-    for (int i = 0; i < 4; i++) { 
+    for (int i = 0; i < 4; i++) {
       _children.add(
         CandWidget(
           index: i,
@@ -138,9 +157,12 @@ class _QuizzScreenState extends State<QuizzScreen> {
           answerState: _answerState[i], //4개의 선택지중 i번째 선택지가 눌렸는지 true, false
           tap: () {
 //            print('tapped!');
-            setState(() {//선택지가 눌렸을때
-              for (int j = 0; j < 4; j++) {// 반복문을 통해 전체 선택지를 확인하며 지금의 선택지의 answerState를 true로 변경해주며 answers에 기록
-                if (j == i) {//눌린 선택지 index를찾아
+            setState(() {
+              //선택지가 눌렸을때
+              for (int j = 0; j < 4; j++) {
+                // 반복문을 통해 전체 선택지를 확인하며 지금의 선택지의 answerState를 true로 변경해주며 answers에 기록
+                if (j == i) {
+                  //눌린 선택지 index를찾아
                   _answerState[j] = true; //그 index(j)번째 선택지의 상태를 true로 바꾼다
                   _answers[_currentIndex] = j; //현재 문제의 사용자 답 변수에 index(j)를 저장
 //                  print(_answers[_currentIndex]);
@@ -154,7 +176,9 @@ class _QuizzScreenState extends State<QuizzScreen> {
         ),
       );
       _children.add(
-        Padding(padding: EdgeInsets.all(width*0.024),),
+        Padding(
+          padding: EdgeInsets.all(width * 0.024),
+        ),
       );
     }
     return _children;
